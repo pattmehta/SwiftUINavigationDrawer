@@ -44,7 +44,7 @@ struct NavigationDrawerModifier: ViewModifier {
 
 extension View {
     
-    func navigationDrawerModifier(geometry: GeometryProxy, uiColor: UIColor) -> some View {
+    public func navigationDrawerModifier(geometry: GeometryProxy, uiColor: UIColor) -> some View {
         ModifiedContent(
             content: self,
             modifier: NavigationDrawerModifier(geometry: geometry, uiColor: uiColor)
