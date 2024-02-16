@@ -20,8 +20,27 @@ struct ExampleApp: View {
             .frame(width: geometry.size.width,
                    height: geometry.size.height)
             .navigationDrawerModifier(geometry: geometry,
-                                      uiColor: .systemTeal)
+                                      scrimColor: UIColor.black,
+                                      drawerColor: UIColor.systemTeal,
+                                      drawerContent: drawerContent() as! AnyView)
         }
+    }
+}
+
+extension ExampleApp {
+    
+    @ViewBuilder
+    func drawerContent() -> some View {
+        VStack(alignment: .leading) {
+            Text("drawer content").font(.system(size: 8))
+            Button("Option") {
+                print("drawer option clicked")
+            }
+            .buttonStyle(.borderedProminent)
+        }
+        .frame(width: 250, alignment: .topLeading)
+        .overlay(Rectangle().stroke(lineWidth: 1))
+        .offset(y: 20)
     }
 }
 
