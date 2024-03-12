@@ -8,6 +8,7 @@ public enum NavigationDrawerState {
 struct NavigationDrawerModifier: ViewModifier {
     
     @Binding private var navigationDrawerState: NavigationDrawerState
+    @Binding private var navigationDrawerDisabledState: Bool
     let geometry: GeometryProxy
     let scrimColor: UIColor
     let drawerColor: UIColor
@@ -18,12 +19,14 @@ struct NavigationDrawerModifier: ViewModifier {
     let dragMinDistance = NavigationDrawerConstants.dragMinDistance
     
     init(geometry: GeometryProxy, scrimColor: UIColor, drawerColor: UIColor,
-         drawerContent: AnyView, navigationDrawerState: Binding<NavigationDrawerState>) {
+         drawerContent: AnyView,
+         navigationDrawerState: Binding<NavigationDrawerState>, navigationDrawerDisabledState: Binding<Bool>) {
         self.geometry = geometry
         self.scrimColor = scrimColor
         self.drawerColor = drawerColor
         self.drawerContent = drawerContent
         self._navigationDrawerState = navigationDrawerState
+        self._navigationDrawerDisabledState = navigationDrawerDisabledState
     }
     
     var height: CGFloat {
@@ -55,6 +58,9 @@ struct NavigationDrawerModifier: ViewModifier {
                 .gesture(
                     DragGesture(minimumDistance: dragMinDistance, coordinateSpace: .global)
                     .onEnded { value in
+                        if navigationDrawerDisabledState {
+                            return
+                        }
                         let horizontalAmount = value.translation.width
                         let verticalAmount = value.translation.height
                         guard abs(horizontalAmount) > abs(verticalAmount) else {
@@ -75,11 +81,12 @@ extension View {
     
     public func navigationDrawerModifier(
         geometry: GeometryProxy, scrimColor: UIColor, drawerColor: UIColor,
-        drawerContent: AnyView, navigationDrawerState: Binding<NavigationDrawerState>) -> some View {
+        drawerContent: AnyView, navigationDrawerState: Binding<NavigationDrawerState>, navigationDrawerDisabledState: Binding<Bool>) -> some View {
         ModifiedContent(
             content: self,
             modifier: NavigationDrawerModifier(geometry: geometry, scrimColor: scrimColor, drawerColor: drawerColor,
-                                               drawerContent: drawerContent, navigationDrawerState: navigationDrawerState)
+                                               drawerContent: drawerContent,
+                                               navigationDrawerState: navigationDrawerState, navigationDrawerDisabledState: navigationDrawerDisabledState)
         )
     }
 }

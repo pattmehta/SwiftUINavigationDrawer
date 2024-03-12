@@ -21,7 +21,8 @@ this frame's bounds.
                                   scrimColor: UIColor.black,
                                   drawerColor: UIColor.systemTeal,
                                   drawerContent: drawerContent() as! AnyView,
-                                  navigationDrawerState: $navigationDrawerState)
+                                  navigationDrawerState: $navigationDrawerState,
+                                  navigationDrawerDisabledState: navigationDrawerDisabledState)
     }
 
 #### Description
@@ -30,14 +31,20 @@ this frame's bounds.
 - **scrimColor**: Color of the transparent overlay to tint the drawer content background.
 - **drawerColor**: Color of the drawer view itself.
 - **drawerContent**: An `AnyView` that defines the content to display within the drawer.
-- **navigationDrawerState**: A `Binding` to the state of the navigation drawer.
+- **navigationDrawerState**: A `Binding` to the opened/closed state of the navigation drawer.
+- **navigationDrawerDisabledState**: A `Binding` to the disabled state of the navigation drawer.
 
 #### Details
 
 The `navigationDrawerState` parameter above is a `@Binding` to a correponding
-drawer state, which can be created in the following manner.
+drawer state, which can be created in the following manner. Its purpose is to
+update the opened/closed state of the drawer. The `navigationDrawerDisabledState`
+is a binding to modify the swipe gesture functionality to entirely disable the
+drawer from appearing. This can be used in, say, a login screen, where (generally)
+a navigation drawer is not displayed.
 
 > @State private var navigationDrawerState: NavigationDrawerState = .closed
+> @State private var navigationDrawerDisabledState: Bool = false
 
 The latest **update** in the `ExampleApp` performs an extra step in the drawer
 `Option` button, where setting the drawer state to `closed` causes the drawer to

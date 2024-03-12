@@ -13,6 +13,7 @@ struct HomeScreen: View {
 struct ExampleApp: View {
     
     @State private var navigationDrawerState: NavigationDrawerState = .closed
+    @State private var navigationDrawerDisabledState: Bool = false
     
     var body: some View {
         GeometryReader() { geometry in
@@ -25,7 +26,8 @@ struct ExampleApp: View {
                                       scrimColor: UIColor.black,
                                       drawerColor: UIColor.systemTeal,
                                       drawerContent: drawerContent() as! AnyView,
-                                      navigationDrawerState: $navigationDrawerState)
+                                      navigationDrawerState: $navigationDrawerState,
+                                      navigationDrawerDisabledState: $navigationDrawerDisabledState)
         }
     }
 }
