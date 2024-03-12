@@ -40,11 +40,11 @@ The `navigationDrawerState` parameter above is a `@Binding` to a correponding
 drawer state, which can be created in the following manner. Its purpose is to
 update the opened/closed state of the drawer. The `navigationDrawerDisabledState`
 is a binding to modify the swipe gesture functionality to entirely disable the
-drawer from appearing. This can be used in, say, a login screen, where (generally)
-a navigation drawer is not displayed.
+drawer from appearing, if its value is set to `true`. This value can be modified
+between screens.
 
-> @State private var navigationDrawerState: NavigationDrawerState = .closed
-> @State private var navigationDrawerDisabledState: Bool = false
+    @State private var navigationDrawerState: NavigationDrawerState = .closed
+    @State private var navigationDrawerDisabledState: Bool = false
 
 The latest **update** in the `ExampleApp` performs an extra step in the drawer
 `Option` button, where setting the drawer state to `closed` causes the drawer to
