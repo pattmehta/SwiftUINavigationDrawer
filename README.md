@@ -20,7 +20,32 @@ this frame's bounds.
         .navigationDrawerModifier(geometry: geometry,
                                   scrimColor: UIColor.black,
                                   drawerColor: UIColor.systemTeal,
-                                  drawerContent: drawerContent() as! AnyView)
+                                  drawerContent: drawerContent() as! AnyView,
+                                  navigationDrawerState: $navigationDrawerState)
+    }
+
+#### Description
+
+- **geometry**: Represents the layout of the main view onto which the drawer is attached.
+- **scrimColor**: Color of the transparent overlay to tint the drawer content background.
+- **drawerColor**: Color of the drawer view itself.
+- **drawerContent**: An `AnyView` that defines the content to display within the drawer.
+- **navigationDrawerState**: A `Binding` to the state of the navigation drawer.
+
+#### Details
+
+The `navigationDrawerState` parameter above is a `@Binding` to a correponding
+drawer state, which can be created in the following manner.
+
+> @State private var navigationDrawerState: NavigationDrawerState = .closed
+
+The latest **update** in the `ExampleApp` performs an extra step in the drawer
+`Option` button, where setting the drawer state to `closed` causes the drawer to
+close, just like it would normally close with a swipe gesture.
+
+    Button("Option") {
+        print("drawer option clicked")
+        navigationDrawerState = .closed
     }
 
 ### Platforms
@@ -30,4 +55,4 @@ this frame's bounds.
 
 ### Example
 
-<img src="./readme_img/example.gif" width="500" alt="example" />
+<img src="./readme_img/example.gif" width="300" alt="example" />

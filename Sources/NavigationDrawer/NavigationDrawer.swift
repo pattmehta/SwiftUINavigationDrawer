@@ -1,8 +1,13 @@
 import SwiftUI
 
+public enum NavigationDrawerState {
+    case opened
+    case closed
+}
+
 struct NavigationDrawerModifier: ViewModifier {
     
-    @State private var animate: Bool = false
+    @Binding private var navigationDrawerState: NavigationDrawerState
     let geometry: GeometryProxy
     let scrimColor: UIColor
     let drawerColor: UIColor
@@ -12,29 +17,39 @@ struct NavigationDrawerModifier: ViewModifier {
     let zIndex = NavigationDrawerConstants.zIndex
     let dragMinDistance = NavigationDrawerConstants.dragMinDistance
     
-    init(geometry: GeometryProxy, scrimColor: UIColor, drawerColor: UIColor, drawerContent: AnyView) {
+    init(geometry: GeometryProxy, scrimColor: UIColor, drawerColor: UIColor,
+         drawerContent: AnyView, navigationDrawerState: Binding<NavigationDrawerState>) {
         self.geometry = geometry
         self.scrimColor = scrimColor
         self.drawerColor = drawerColor
         self.drawerContent = drawerContent
+        self._navigationDrawerState = navigationDrawerState
+    }
+    
+    var height: CGFloat {
+        geometry.size.height
+    }
+    
+    var isDrawerOpened: Bool {
+        navigationDrawerState == .opened
     }
     
     func body(content: Content) -> some View {
         ZStack(alignment: .topLeading) {
             Group {
                 Color(scrimColor)
-                    .opacity(animate ? scrimOpacity : 0.0)
-                    .animation(.spring(), value: animate)
-                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .opacity(isDrawerOpened ? scrimOpacity : 0.0)
+                    .animation(.spring(), value: isDrawerOpened)
+                    .frame(width: geometry.size.width, height: height)
                     .allowsHitTesting(false)
                 Group {
                     Color(drawerColor)
-                        .frame(width: geometry.size.width * widthRatio, height: geometry.size.height)
+                        .frame(width: geometry.size.width * widthRatio, height: height)
                         .allowsHitTesting(false)
                     drawerContent
                 }
-                .offset(x: animate ? 0 : -geometry.size.width)
-                .animation(.spring(), value: animate)
+                .offset(x: isDrawerOpened ? 0 : -geometry.size.width)
+                .animation(.spring(), value: isDrawerOpened)
             }.zIndex(zIndex)
             content
                 .gesture(
@@ -45,11 +60,11 @@ struct NavigationDrawerModifier: ViewModifier {
                         guard abs(horizontalAmount) > abs(verticalAmount) else {
                             return
                         }
-                        if horizontalAmount > 0 && !animate {
-                            animate = true
+                        if horizontalAmount > 0 && !isDrawerOpened {
+                            navigationDrawerState = .opened
                         }
-                        if horizontalAmount <= 0 && animate {
-                            animate = false
+                        if horizontalAmount <= 0 && isDrawerOpened {
+                            navigationDrawerState = .closed
                         }
                 })
         }
@@ -58,10 +73,13 @@ struct NavigationDrawerModifier: ViewModifier {
 
 extension View {
     
-    public func navigationDrawerModifier(geometry: GeometryProxy, scrimColor: UIColor, drawerColor: UIColor, drawerContent: AnyView) -> some View {
+    public func navigationDrawerModifier(
+        geometry: GeometryProxy, scrimColor: UIColor, drawerColor: UIColor,
+        drawerContent: AnyView, navigationDrawerState: Binding<NavigationDrawerState>) -> some View {
         ModifiedContent(
             content: self,
-            modifier: NavigationDrawerModifier(geometry: geometry, scrimColor: scrimColor, drawerColor: drawerColor, drawerContent: drawerContent)
+            modifier: NavigationDrawerModifier(geometry: geometry, scrimColor: scrimColor, drawerColor: drawerColor,
+                                               drawerContent: drawerContent, navigationDrawerState: navigationDrawerState)
         )
     }
 }

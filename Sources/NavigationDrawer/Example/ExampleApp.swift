@@ -12,6 +12,8 @@ struct HomeScreen: View {
 
 struct ExampleApp: View {
     
+    @State private var navigationDrawerState: NavigationDrawerState = .closed
+    
     var body: some View {
         GeometryReader() { geometry in
             ZStack(alignment: .topLeading) {
@@ -22,7 +24,8 @@ struct ExampleApp: View {
             .navigationDrawerModifier(geometry: geometry,
                                       scrimColor: UIColor.black,
                                       drawerColor: UIColor.systemTeal,
-                                      drawerContent: drawerContent() as! AnyView)
+                                      drawerContent: drawerContent() as! AnyView,
+                                      navigationDrawerState: $navigationDrawerState)
         }
     }
 }
@@ -35,6 +38,7 @@ extension ExampleApp {
             Text("drawer content").font(.system(size: 8))
             Button("Option") {
                 print("drawer option clicked")
+                navigationDrawerState = .closed
             }
             .buttonStyle(.borderedProminent)
         }
