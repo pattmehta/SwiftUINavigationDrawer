@@ -2,7 +2,7 @@
 /.build
 /Packages
 xcuserdata/
-.swiftpm/
 DerivedData/
+.swiftpm/
 .netrc
 tmp/
